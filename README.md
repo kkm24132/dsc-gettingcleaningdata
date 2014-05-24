@@ -17,9 +17,51 @@ at the current working directory. However, I found it interesting to
 experiment also with dealing with the lack of data files or with the
 situation when a user desires to start directly from the zipfile. This
 is tackled by allowing to download the original zipfile again, if the
-user desires to work with as "pristine" data as possible. *It should
+user desires to work with as "pristine" data as possible. *It should be
 clear* that if you run the script "as is" then it will work in the
 default mode exactly prescribed by the assessment project instructions.
+
+## How to run the script
+
+By default just open up a terminal and assuming you are at the location
+where you've cloned this repository you should be able to just run R and then
+
+```
+source("run_analysis.R")
+```
+
+This will execute the R script with the default options and
+assumptions. At the end of the execution you should have a file called
+"UCI\_HAR\_Dataset\_Tidy.csv" which contains the tidy data. During the
+execution the script prints out some information regarding the
+assumptions it makes and the actions it takes. 
+
+## Output file description
+
+The run\_analysis.R script, if run in the default manner, produces an
+output file "UCI\_HAR\_Dataset\_Tidy.csv" which contains the tidy
+data. The file contains exactly 181 lines: the top header with the
+variable names, followed by a series of 6 observatio rows (1 per
+activity) for each of the 30 subjects involved in the original data.
+
+Each row contains values for 81 variables. Here's a short account of each of these variables:
+* ID: (Integer) The id of the subject involved in the measurements
+* ACTIVITY: (Factor) the label of the activity involved. Could be one of
+  * 1 WALKING
+  * 2 WALKING\_UPSTAIRS
+  * 3 WALKING\_DOWNSTAIRS
+  * 4 SITTING
+  * 5 STANDING
+  * 6 LAYING
+* The remaining columns are numeric and contain the mean or standard deviation of the measurements for a total of 79 feature variables which represent the following. Note: in the names below the prefix 't' denotes time, the prefix 'f' denotes frequency; 'XYZ' denotes 3-axial signals in any one of the X, or Y, or Z directions:
+  * the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ - 
+    * The acceleration signal is split into body and gravity acceleration signals (tBodyAcc-XYZ, tGravityAcc-XYZ)
+    * Body linear acceleration and angular velocity have been derived to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ)
+    * The magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag).
+  * The result of a Fast Fourier Transform (FFT) applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals).
+  Additionally, each variable may have the qualifier 'mean' in its name which indicates the measure is the mean value, or 'std' which indicates the value is the standard deviation, or 'meanFreq' which indicates the value is the weighted average of the frequency components to obtain a mean frequency.
+
+
 
 
 ## Structure of the script
@@ -33,6 +75,7 @@ The script contains three areas outlined by clear comments:
   prescriptions. The assumption here is that the global variables are
   not changed in any way for the bottom of the script to execute
   successfuly.
+
 
 ## Global variables - basic assumptions
 The script global variables define
