@@ -1,7 +1,7 @@
 # Getting and Cleaning Data - Data Science - Coursera
-# Peer assessment project
-# Author: Ilias Biris
-# Email: ibiris@gmail.com
+## Peer assessment project
+### Author: Ilias Biris
+### Email: ibiris@gmail.com
 =====================================================================
 
 This is the repository containing code, resulting tidy dataset and data
@@ -155,6 +155,7 @@ frames are assembled and joined together and how the aggregation is
 done. As such it takes some 39+ seconds to complete. Possible
 optimisations to try out as next step would be
 
+*FIXME* Following part needs updating
 * The aggregate function could be 
 
 
