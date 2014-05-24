@@ -98,7 +98,7 @@ The script global variables define
 ## SECTION 2: Functions to break down the processing
 There are 3 functions to handle the processing of the data:
 
-* determine.data.files: this is a function which determines which data
+* determineDataFiles: this is a function which determines which data
   files to use for the processing. It just makes life easier to define
   those filenames once and put them in a list which can be reused
   instead of bulding those filename strings again and again.
@@ -127,7 +127,7 @@ There are 3 functions to handle the processing of the data:
   subsequent processing functions can use the labels to extract
   filenames.
 
-* process.and.merge.data: This is he main data processing function in
+* processAndMergeData: This is he main data processing function in
   this script.It tidies up the data according to the following
   principles (1) Account for all the training and all the test
   data. Merge the training and the test sets to create one data set. (2)
@@ -164,7 +164,7 @@ There are 3 functions to handle the processing of the data:
     aggregate to do that)
   * finally it orders the data frame per subject, and returns it.
 
-* write.tidy.dataset.csv: this function expects
+* writeTidyDatasetCsv: this function expects
   * in.dfrm: a data frame which contains the list of values to be
     written out
   * out.csv.file: the filename for the CSV file to be produced

@@ -63,7 +63,7 @@ data.file.tidy <- "UCI_HAR_Dataset_Tidy.csv"
 # also be used separately for debugging as well as to determine the
 # outputs at different stages of this implementation
 
-## FUNCTION determine.data.files
+## FUNCTION determineDataFiles
 ##
 ## Inputs: source.data: source data URL, result.top.dir: the top data
 ##         directory, where the data should be deployed,
@@ -81,10 +81,10 @@ data.file.tidy <- "UCI_HAR_Dataset_Tidy.csv"
 ## further on, as well as checking that each of the needed files is in
 ## place. 
 
-determine.data.files <- function (source.data=web.data.source,
-                                  result.top.dir=top.data.dir,
-                                  local.data.zipped=data.file.zipped,
-                                  work.with.zipped.data=work.with.zipped.datafile) {
+determineDataFiles <- function (source.data=web.data.source,
+                                result.top.dir=top.data.dir,
+                                local.data.zipped=data.file.zipped,
+                                work.with.zipped.data=work.with.zipped.datafile) {
     if( work.with.zipped.data ) {
 
         #first make sure that there is no ordinary file with the same
@@ -150,7 +150,7 @@ determine.data.files <- function (source.data=web.data.source,
     return(data.files)
 }
 
-## FUNCTION process.and.merge.data
+## FUNCTION processAndMergeData
 ##
 ## Inputs: list.data.files: a list of strings indicating the filenames
 ##         for the files that should be processed.
@@ -166,7 +166,7 @@ determine.data.files <- function (source.data=web.data.source,
 ## subject column. (5) Finally, create a second, independent tidy data
 ## set with the average of each variable for each activity and each
 ## subject.
-process.and.merge.data <- function(list.data.files) {
+processAndMergeData <- function(list.data.files) {
     # if the list is NULL or empty then stop. 
     if(is.null(list.data.files) || length(list.data.files) == 0) {
         stop("The list of data files to use for data processing is null/empty!\n")
@@ -180,6 +180,7 @@ process.and.merge.data <- function(list.data.files) {
     # (values are in X dataset below) - as a data frame of 2 columns
     # (ID and NAME)
     features   <- read.table(list.data.files$features, header=FALSE,col.names=c("ID","NAME"))
+    features <- 
     cat("Processing ... Got all the feature names\n")
     
     # get all test and train subjects and combine them in a single
@@ -228,7 +229,7 @@ process.and.merge.data <- function(list.data.files) {
 }
 
 
-## FUNCTION write.tidy.dataset.csv
+## FUNCTION writeTidyDatasetCsv
 ##
 ## Inputs: in.dfrm: a data frame which contains the list of values to be
 ## written out, out.csv.file: the filename for the CSV file to be
@@ -239,7 +240,7 @@ process.and.merge.data <- function(list.data.files) {
 ## write out the values from the input data frame
 ##
 
-write.tidy.dataset.csv <- function (in.dfrm,
+writeTidyDatasetCsv <- function (in.dfrm,
                                     out.csv.file=data.file.tidy,
                                     appendl=FALSE) {
     if(is.null(in.dfrm)) {
@@ -263,7 +264,7 @@ write.tidy.dataset.csv <- function (in.dfrm,
 # the way expected by the peer assessment project prescription.
 
 if(execute.data.processing) {
-    write.tidy.dataset.csv(in.dfrm=process.and.merge.data(list.data.files=determine.data.files()))
+    writeTidyDatasetCsv(in.dfrm=processAndMergeData(list.data.files=determineDataFiles()))
     
 }
 
