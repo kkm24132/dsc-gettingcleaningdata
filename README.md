@@ -59,7 +59,8 @@ Each row contains values for 81 variables. Here's a short account of each of the
     * Body linear acceleration and angular velocity have been derived to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ)
     * The magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag).
   * The result of a Fast Fourier Transform (FFT) applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals).
-  Additionally, each variable may have the qualifier 'mean' in its name which indicates the measure is the mean value, or 'std' which indicates the value is the standard deviation, or 'meanFreq' which indicates the value is the weighted average of the frequency components to obtain a mean frequency.
+
+Additionally, each variable may have the qualifier 'mean' in its name which indicates the measure is the mean value, or 'std' which indicates the value is the standard deviation, or 'meanFreq' which indicates the value is the weighted average of the frequency components to obtain a mean frequency.
 
 
 
