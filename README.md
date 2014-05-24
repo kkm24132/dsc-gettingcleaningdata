@@ -78,7 +78,7 @@ The script contains three areas outlined by clear comments:
   successfuly.
 
 
-## Global variables - basic assumptions
+## SECTION 1: Global variables - basic assumptions
 The script global variables define
 * work.with.zipped.datafile: is TRUE if the user wants to use the
   zipfile with the data instead of assuming that the data is unpacked at
@@ -95,7 +95,7 @@ The script global variables define
   as a reference.
 * data.file.tidy: Local filename for the final "tidy" data set. 
 
-## Functions to break down the processing
+## SECTION 2: Functions to break down the processing
 There are 3 functions to handle the processing of the data:
 
 * determine.data.files: this is a function which determines which data
@@ -174,20 +174,20 @@ There are 3 functions to handle the processing of the data:
 	After it checks that the input data frame is not null it uses
     write.table to write the data frame into the output file.
 
-## Default execution
+## SECTION 3: "Default" execution
 
-If the top variable execute.data.processing is set to TRUE then this
-last part of the script simply executes all the functions defined above
-in sequence to get the resulting CSV file with the tidy data set. If
-none of the global variables were changed, then the execution is
-expected to fully comply with the requirements set by the project
-definition.
+If the top variable execute.data.processing is set to TRUE, then will
+the last section of the script executes all the functions defined above
+in a sequence. The result is a CSV file with the tidy data set. The
+default execution is expected to fully comply with the requirements set
+by the project definition.
 
 ## What else to note
 ### Performance
 
-This script is not very fast. Taking a basic timing via system.time the
-whole script as executed by default shows the following times:
+Taking a basic timing via system.time the whole script as executed by
+default shows the following times (system used: Lenovo Thinkpad T510i i5
+processor, 8GB RAM):
 
 ```
    user  system elapsed
@@ -195,12 +195,13 @@ whole script as executed by default shows the following times:
 ```
 
 In fact this script just goes "by the book" in terms of how the data
-frames are assembled and joined together and how the aggregation is
-done. As such it takes some 39+ seconds to complete. Possible
-optimisations to try out as next step would be
+frames are assembled and joined together and how the aggregation is done
+(even though 'aggregate' is not too bad performance-wise). A quick pry
+through the execution stack reveals most of the time is actually spent
+reading files, so perhaps there is not much one can do to improve the
+performance of this script.
 
-*FIXME* Following part needs updating
-* The aggregate function could be 
+
 
 
 
