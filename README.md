@@ -4,14 +4,30 @@
 ### Email: ibiris@gmail.com
 =====================================================================
 
+# General description of the files and variables involved
+
 This is the repository containing code, resulting tidy dataset and data
 cookbook for the submission by Ilias Biris of the peer assessment
 project for the Getting and Cleaning Data class.
 
-The script is run_analysis.R. The script contains numerous comments to
-explain its function but here are some basic instructions on its
-structure, how to run it and what to expect as result.
+There are 4 files in the repo:
+* README.md: this file you are reading now.
+* run\_analysis.R: A R script which contains the main functionality of
+working with the specific data set linked to from the course website -
+it contains functions and variable definitions which help process the
+data and shape it into a new data set that could be considered "tidy"
+when seen under the assumptions set by the course project definition.
+* Codebook.md: a data "codebook" file; it describes each variable and
+  its values in the tidy data set.
+* UCI\_HAR\_Dataset\_Tidy.csv: this is the tidy data set which is
+  produced by the R script, based on the input data which is made
+  available by the course website.
 
+The next few subsections will look at the script and the output tidy
+dataset in more detail. Further down there is another section describing
+in more detail the script itself and what it does.
+
+## run_analysis.R script
 The basic requirement of the project was to assume the data is in place,
 at the current working directory. However, I found it interesting to
 experiment also with dealing with the lack of data files or with the
@@ -21,7 +37,7 @@ user desires to work with as "pristine" data as possible. *It should be
 clear* that if you run the script "as is" then it will work in the
 default mode exactly prescribed by the assessment project instructions.
 
-## How to run the script
+### How to run the script
 
 By default just open up a terminal and assuming you are at the location
 where you've cloned this repository you should be able to just run R and then
@@ -36,7 +52,7 @@ assumptions. At the end of the execution you should have a file called
 execution the script prints out some information regarding the
 assumptions it makes and the actions it takes. 
 
-## Output file description
+## Output dataset file description
 
 The run\_analysis.R script, if run in the default manner, produces an
 output file "UCI\_HAR\_Dataset\_Tidy.csv" which contains the tidy
@@ -53,17 +69,38 @@ Each row contains values for 81 variables. Here's a short account of each of the
   * 4 SITTING
   * 5 STANDING
   * 6 LAYING
-* The remaining columns are numeric and contain the mean or standard deviation of the measurements for a total of 79 feature variables which represent the following. Note: in the names below the prefix 't' denotes time, the prefix 'f' denotes frequency; 'XYZ' denotes 3-axial signals in any one of the X, or Y, or Z directions:
-  * the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ - 
-    * The acceleration signal is split into body and gravity acceleration signals (tBodyAcc-XYZ, tGravityAcc-XYZ)
-    * Body linear acceleration and angular velocity have been derived to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ)
-    * The magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag).
-  * The result of a Fast Fourier Transform (FFT) applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals).
+* The remaining columns are numeric and contain the mean or standard
+  deviation of the measurements for a total of 79 feature variables
+  which represent the following.
 
-Additionally, each variable may have the qualifier 'mean' in its name which indicates the measure is the mean value, or 'std' which indicates the value is the standard deviation, or 'meanFreq' which indicates the value is the weighted average of the frequency components to obtain a mean frequency.
+  Note: in the names below the prefix 't' denotes a time domain
+  variable, the prefix 'f' denotes a frequency domai variable; 'xyz'
+  denotes 3-axial signals in any one of the X, or Y, or Z directions:
+  * the accelerometer and gyroscope 3-axial raw signals taccxyz and
+    tgyroxyz -
+    * The acceleration signal is split into body and gravity
+      acceleration signals (tbodyaccxyz, tgravityaccxyz)
+    * Body linear acceleration and angular velocity have been derived to
+      obtain jerk signals (tbodyaccjerkxyz and tbodygyrojerkxyz)
+    * The magnitude of these three-dimensional signals were calculated
+      using the Euclidean norm (tbodyaccmag, tgravityaccmag,
+      tbodyaccjerkmag, tbodygyromag, tbodygyrojerkmag).
+  * The result of a Fast Fourier Transform (FFT) when applied to some of
+    these signals are variables such as fbodyaccxyz, fbodyaccjerkxyz,
+    fbodygyroxyz, fbodyaccjerkmag, fbodygyromag, fbodygyrojerkmag. (Note
+    the 'f' to indicate frequency domain signals for these variables).
 
+  Additionally, each variable may have the following qualifiers as
+  endings for its name
+  * 'mean' indicates the measure is the mean value, 
+  * 'std' indicates the value is the standard deviation, 
+  * 'meanFreq' indicates the value is the weighted average of the
+    frequency components to obtain a mean frequency (so meanfreq appears
+    as ending only for the names of frequency domain variables).
 
+# More details about the script
 
+Let's now look at more details about the script itself and how it works.
 
 ## Structure of the script
 The script contains three areas outlined by clear comments:
@@ -145,16 +182,26 @@ There are 3 functions to handle the processing of the data:
   In more detail for the functionality this function
   * gets all the activities from the activities, as a data frame with
     columns ID/NAME
-  * gets all the feature labels again with columns being ID/NAME
+  * gets all the feature labels again with columns being
+    ID/NAME. Importantly, it removes any R "significant" characters such
+    as parentheses, ".", "-" or "," from the feature name values. The
+    feature name values are also turned lower case
   * gets all the test and training subjects as single column data
     frames - it then combines them into 1 single-column data frame using
     rbind
-  * gets all the features actual data per subject - for both test and
-    training. It uses the feature labels as column names - so it refers
-    to the feature labels data frame from the step described above. It
-    combines both test and train dta into 1 data frame. Having done
-    that, it proceeds to maintain only the feature data which contain
-    the labels "mean" or "std" in the column names
+  * gets all the features actual data values per subject - for both test
+    and training - as a data frame. It uses the feature labels as column
+    names - so it refers to the feature labels data frame from the step
+    described above. It combines both test and train data frames into 1
+    data frame. Having done that, it proceeds to maintain only the
+    feature data which contain the labels "mean" or "std" in the
+    corresponding feature column names - that in turn leaves only those
+    feature columns which express the mean or standard deviation of an
+    observation variable as well as those variables which have the name
+    "meanfreq" - a mean frequency which is available for the frequency
+    domain features and is calculated in the original data set as the
+    weighted average of a number of frequency components - details about
+    these variables are given in the file Cookbook.md
   * it extracts the activities results per subject (test and train). It
     binds the two data frames into 1. Then it replaces the activities
     values with meaningful names using the activity labels instead.

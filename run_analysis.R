@@ -180,7 +180,11 @@ processAndMergeData <- function(list.data.files) {
     # (values are in X dataset below) - as a data frame of 2 columns
     # (ID and NAME)
     features   <- read.table(list.data.files$features, header=FALSE,col.names=c("ID","NAME"))
-    features <- 
+
+    # for the extracted features, remove any R "language significant
+    # characters" to avoid issues later on
+    features$NAME <- sapply(features$NAME, function(x) tolower(gsub("[\\.\\( \\)\\,\\-]","",x)))
+
     cat("Processing ... Got all the feature names\n")
     
     # get all test and train subjects and combine them in a single
@@ -200,6 +204,7 @@ processAndMergeData <- function(list.data.files) {
     
     # extract only the mean and stddev for each of the measurements
     data.X <- data.X[,grep("mean|std",features$NAME)]
+
 
     # get the activities results per subject (test and train)
     data.test.Y  <- read.table(list.data.files$ytest, header=FALSE, col.names=c("ACTIVITY"))
