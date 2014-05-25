@@ -68,7 +68,8 @@ data. The file contains exactly 181 lines: the top header with the
 variable names, followed by a series of 6 observatio rows (1 per
 activity) for each of the 30 subjects involved in the original data.
 
-Each row contains values for 86 variables. Here's a short account of each of these variables:
+Each row contains values for 68 variables. Here's a short account of
+each of these variables:
 * id: (Integer) The id of the subject involved in the measurements
 * activity: (Factor) the label of the activity involved. Could be one of
   * 1 WALKING
@@ -77,9 +78,10 @@ Each row contains values for 86 variables. Here's a short account of each of the
   * 4 SITTING
   * 5 STANDING
   * 6 LAYING
-* The remaining columns are numeric. They contain the mean, mean
-  frequency or standard deviation of the measurements for a total of 86
-  feature variables which represent the following:
+* The remaining columns are numeric. They contain the average (per
+  subject and activity) values of the mean or standard deviation of the
+  measurements for a total of 66 feature variables which represent the
+  following:
 
   Note: in the names below the prefix 't.' denotes a time domain
   variable, the prefix 'f.' denotes a frequency domain variable. 'xyz'
@@ -113,26 +115,6 @@ Each row contains values for 86 variables. Here's a short account of each of the
       f.bodyacc.std.xyz, f.bodyaccjerk.mean.xyz, f.bodyaccjerk.std.xyz,
       f.bodygyro.mean.xyz, f.bodygyro.std.xyz, f.bodyaccmag.mean,
       f.bodyaccmag.std.
-    * For the frequency domain variables, we are also getting the
-      "meanfreq" types of variables: those are calculated based on the
-      weighted average of the corresponding frequency components around
-      a detected peak value in the spectrum to obtain a mean frequency
-      result. These variables are f.bodyacc.meanfreq.xyz,
-      f.bodyaccjerk.meanfreq.xyz, f.bodygyro.meanfreq.xyz,
-      f.bodyaccmag.meanfreq, f.bodyaccjerkmag.meanfreq,
-      f.bodygyromag.meanfreq, f.bodygyrojerkmag.meanfreq
-  * **"Angle variables"**
-    * Finally there are a number of variables whose name starts with
-      "angle": angle.tbodyaccmean.gravity,
-      angle.tbodyaccjerkmean.gravitymean,
-      angle.tbodygyromean.gravitymean,
-      angle.tbodygyrojerkmean.gravitymean, angle.x.gravitymean,
-      angle.y.gravitymean, angle.z.gravitymean. These are based on the
-      angle between some observation vectors - eg mean body acceleration
-      and the gravity line. These variables were maintained in the tidy
-      data set because they make use of the mean variables defined
-      above.
-
 
 # More details about the script
 
@@ -244,14 +226,13 @@ There are 3 functions to handle the processing of the data:
     names - so it refers to the feature labels data frame from the step
     described above. It combines both test and train data frames into 1
     data frame. Having done that, it proceeds to maintain only the
-    feature data which contain the labels "mean" or "std" in the
+    feature data which contain the labels ".mean" or ".std" in the
     corresponding feature column names - that in turn leaves only those
     feature columns which express the mean or standard deviation of an
-    observation variable as well as those variables which have the name
-    "meanfreq" - a mean frequency which is available for the frequency
-    domain features and is calculated in the original data set as the
-    weighted average of a number of frequency components - details about
-    these variables are given in the file Cookbook.md
+    observation variable. Note that the script takes care not to pick
+    those variables which contain the string "meanfreq" - a mean
+    frequency is a different function applied to the sensor signals.
+    Details about these variables are given in the file Cookbook.md
   * it extracts the activities results per subject (test and train). It
     binds the two data frames into 1. Then it replaces the activities
     values with meaningful names using the activity labels instead.
@@ -287,8 +268,8 @@ default shows the following times (system used: Lenovo Thinkpad T510i i5
 processor, 8GB RAM):
 
 ```
-   user  system elapsed 
- 26.706   0.839  27.656
+   user  system  elapsed 
+ 33.283   0.946   34.358
 
 ```
 

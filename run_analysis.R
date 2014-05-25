@@ -249,8 +249,9 @@ ProcessAndMergeData <- function(list.data.files) {
     # extract only the mean and stddev for each of the
     # measurements. Note that this maintains the angle calculations eg
     # between gravitymean and X etc. As those calculations 
-    data.x <- data.x[,grep("mean|std",features$name)]
+    data.x <- data.x[,grep("\\.mean[^f]|\\.mean$|\\.std",features$name)]
 
+  
     # get the activities results per subject (test and train)
     data.test.y  <- read.table(list.data.files$ytest, header=FALSE, col.names=c("activity"))
     data.train.y <- read.table(list.data.files$ytrain, header=FALSE, col.names=c("activity"))
@@ -313,7 +314,7 @@ WriteTidyDatasetCsv <- function (in.dfrm,
 ## at the top, then the following lines execute the functions precisely
 ## in the way expected by the peer assessment project prescription.
 
-if(execute.data.processing) {
+if(executeDataProcessing) {
     list.data.files=DetermineDataFiles()
     dfrm=ProcessAndMergeData(list.data.files)
     WriteTidyDatasetCsv(dfrm)
