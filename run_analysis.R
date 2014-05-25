@@ -5,14 +5,22 @@
 
 ## AUTHOR: Ilias Biris <ibiris@gmail.com>
 
+## Note: this file follows the Google style guide for R
+## https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml
+## 
+
 ## 1. Merges the training and the test sets to create one data set.
+##
 ## 2. Extracts only the measurements on the mean and standard deviation
-##    for each measurement.
-## 3. Uses descriptive activity names to name the activities in the
-##    data set
+##for each measurement.
+##
+## 3. Uses descriptive activity names to name the activities in the data
+##set
+##
 ## 4. Appropriately labels the data set with descriptive activity names.
+##
 ## 5. Creates a second, independent tidy data set with the average of
-##    each variable for each activity and each subject.
+## each variable for each activity and each subject.
 
 ## Initial assumptions
 
@@ -25,45 +33,45 @@
 ## assessment project instructions request.
 
 ###############################################################
-## Global variables definition area 
+## Global constants definition area 
 ###############################################################
 
 ## The processing of the data and preparation of a tidy data set can be
-# executed in a sequence of function calls below. If the execution of
-# those functions is not desired, this flag can be set to FALSE. Then
-# the function and global variable definitions remain to be perused by
-# the user as s/he sees fit
-execute.data.processing <- TRUE
+## executed in a sequence of function calls below. If the execution of
+## those functions is not desired, this flag can be set to FALSE. Then
+## the function and global variable definitions remain to be perused by
+## the user as s/he sees fit
+executeDataProcessing <- TRUE
 
 ## If the user desires to start from scratch - downloading the zip file
-# and working with it directly then the next flag should be set to
-# true. Otherwise the assumption is that the input (dirty) data is
-# already deployed under top.data.dir directory
-work.with.zipped.datafile <- FALSE
+## and working with it directly then the next flag should be set to
+## true. Otherwise the assumption is that the input (dirty) data is
+## already deployed under top.data.dir directory
+workWithZippedDatafile <- FALSE
 
 ## URL where to find the original zipfile
-web.data.source <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+webDataSource <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 ## Top working directory to contain the zip file and the unzipped
 # contents
 WD <- getwd()
-top.data.dir  <- paste(ifelse(is.null(WD),".",WD), "/UCI\ HAR\ Dataset", sep="")
+topDataDir  <- paste(ifelse(is.null(WD),".",WD), "/UCI\ HAR\ Dataset", sep="")
 
 ## Local filename with the zipped data
-data.file.zipped <- "./UCI_HAR_Dataset.zip"
+dataFileZipped <- "./UCI_HAR_Dataset.zip"
 
 ## Local filename for the final "tidy" data set
-data.file.tidy <- "UCI_HAR_Dataset_Tidy.csv"
+dataFileTidy <- "UCI_HAR_Dataset_Tidy.csv"
 
 ###############################################################
 ## Functions definition area 
 ###############################################################
 ## Process steps below - each step is expressed as a new function
-# that takes the given input and returns some output. The functions can
-# also be used separately for debugging as well as to determine the
-# outputs at different stages of this implementation
+## that takes the given input and returns some output. The functions can
+## also be used separately for debugging as well as to determine the
+## outputs at different stages of this implementation
 
-## FUNCTION determineDataFiles
+## FUNCTION DetermineDataFiles
 ##
 ## Inputs: source.data: source data URL, result.top.dir: the top data
 ##         directory, where the data should be deployed,
@@ -81,16 +89,18 @@ data.file.tidy <- "UCI_HAR_Dataset_Tidy.csv"
 ## further on, as well as checking that each of the needed files is in
 ## place. 
 
-determineDataFiles <- function (source.data=web.data.source,
-                                result.top.dir=top.data.dir,
-                                local.data.zipped=data.file.zipped,
-                                work.with.zipped.data=work.with.zipped.datafile) {
+DetermineDataFiles <- function (source.data=webDataSource,
+                                result.top.dir=topDataDir,
+                                local.data.zipped=dataFileZipped,
+                                work.with.zipped.data=workWithZippedDatafile) {
     if( work.with.zipped.data ) {
 
         #first make sure that there is no ordinary file with the same
         #name as the target data directory
         if(file.exists(result.top.dir) && !file_test("-d", result.top.dir)) {
-            stop("Top data directory location: \"", result.top.dir, "\" meant for data processing, exists as ordinary file!\n")
+            stop("Top data directory location: \"",
+                 result.top.dir,
+                 "\" meant for data processing, exists as ordinary file!\n")
         }
         
         # To unzip the data into the result.top.dir, we need that
@@ -119,14 +129,20 @@ determineDataFiles <- function (source.data=web.data.source,
         # because in this case the data should already be in the current
         # working directory
 
-        cat("Assuming the data is available in  directory \"", result.top.dir, "\"\n")
+        cat("Assuming the data is available in  directory \"",
+            result.top.dir,
+            "\"\n")
         
         # if the top data directory is not a directory (either it is a
         # "normal" file or is not there at all) then stop
         if(file.exists(result.top.dir) && !file_test("-d", result.top.dir)) {
-            stop("Top data directory location: \"", result.top.dir, "\" used for data processing, is not a directory!\n")
+            stop("Top data directory location: \"",
+                 result.top.dir,
+                 "\" used for data processing, is not a directory!\n")
         } else if(!file.exists(result.top.dir)) {
-            stop("Top data directory location: \"", result.top.dir, "\" used during data processing, does not exist!\n")
+            stop("Top data directory location: \"",
+                 result.top.dir,
+                 "\" used during data processing, does not exist!\n")
         }
     }
 
@@ -150,7 +166,7 @@ determineDataFiles <- function (source.data=web.data.source,
     return(data.files)
 }
 
-## FUNCTION processAndMergeData
+## FUNCTION ProcessAndMergeData
 ##
 ## Inputs: list.data.files: a list of strings indicating the filenames
 ##         for the files that should be processed.
@@ -166,75 +182,104 @@ determineDataFiles <- function (source.data=web.data.source,
 ## subject column. (5) Finally, create a second, independent tidy data
 ## set with the average of each variable for each activity and each
 ## subject.
-processAndMergeData <- function(list.data.files) {
+ProcessAndMergeData <- function(list.data.files) {
     # if the list is NULL or empty then stop. 
     if(is.null(list.data.files) || length(list.data.files) == 0) {
         stop("The list of data files to use for data processing is null/empty!\n")
     }
     
     # get all the activities - as a data frame with 2 columns (ID and NAME)
-    activities <- read.table(list.data.files$activities, header=FALSE, col.names=c("ID","NAME"))
+    activities <- read.table(list.data.files$activities, header=FALSE, col.names=c("id","name"))
     cat("Processing ... Got all the activities\n")
 
     # get all the feature names - time and frequency based variables
     # (values are in X dataset below) - as a data frame of 2 columns
     # (ID and NAME)
-    features   <- read.table(list.data.files$features, header=FALSE,col.names=c("ID","NAME"))
+    features   <- read.table(list.data.files$features, header=FALSE,col.names=c("id","name"))
 
-    # for the extracted features, remove any R "language significant
-    # characters" to avoid issues later on
-    features$NAME <- sapply(features$NAME, function(x) tolower(gsub("[\\.\\( \\)\\,\\-]","",x)))
+    # for the extracted features, remove or replace characters to
+    # facilitate processing later on. In doing so, I decided to follow
+    # the Google style guide for R:
+    # https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml
+    # So here is a guide of the following substitutions
+    #
+    # 1. any name starting with "t" or "f" is turned to "t." or "f." to
+    # make those differing names stand out. Note that this should only
+    # happen with the starting letter, so there is no need to use gsub
+    # for this. sub will do
+    #
+    # 2. any "-" or "," are replaced with ".".
+    #
+    # 3. Any "()" are completely removed - if left around then cases
+    # like "()-X" will result to something other than just ".X"
+    #
+    # 4. any remaining "(" is turned into "."
+    #
+    # 5. any remaining ')' is dropped completely
+    #
+    # 6. replace duplicate "bodybody" strings with single ones "body" -
+    # there seems to be no practical reason for the repetition
+    #
+    # 6. finally, turn all labels lower case
+    features$name <- sapply(features$name, function(x) sub("^(t|f)","\\1\\.",x))
+    features$name <- sapply(features$name, function(x) gsub("\\-|\\,",".",x))
+    features$name <- sapply(features$name, function(x) gsub("\\(\\)","",x))
+    features$name <- sapply(features$name, function(x) gsub("\\(",".",x))
+    features$name <- sapply(features$name, function(x) gsub("\\)","",x))
+    features$name <- sapply(features$name, function(x) gsub("([bB])ody[bB]ody","\\1ody",x))
+    features$name <- sapply(features$name, function(x) tolower(x))
 
     cat("Processing ... Got all the feature names\n")
     
     # get all test and train subjects and combine them in a single
     # 1-column data frame
-    subject.test  <- read.table(list.data.files$subject.test, header=FALSE, col.names=c("ID"))
-    subject.train <- read.table(list.data.files$subject.train, header=FALSE, col.names=c("ID"))
+    subject.test  <- read.table(list.data.files$subject.test, header=FALSE, col.names=c("id"))
+    subject.train <- read.table(list.data.files$subject.train, header=FALSE, col.names=c("id"))
     subjects <- rbind(subject.train, subject.test)
     cat("Processing ... Got all the subjects (train/test)\n")
 
     
     # get the features actual data per subject(test and training), use
     # the feature labels for column names
-    data.test.X  <- read.table(list.data.files$xtest, header=FALSE, col.names=features$NAME)
-    data.train.X <- read.table(list.data.files$xtrain, header=FALSE, col.names=features$NAME)
-    data.X <- rbind(data.test.X, data.train.X)
+    data.test.x  <- read.table(list.data.files$xtest, header=FALSE, col.names=features$name)
+    data.train.x <- read.table(list.data.files$xtrain, header=FALSE, col.names=features$name)
+    data.x <- rbind(data.test.x, data.train.x)
     cat("Processing ... Got all the feature values (train/test)\n")
     
-    # extract only the mean and stddev for each of the measurements
-    data.X <- data.X[,grep("mean|std",features$NAME)]
-
+    # extract only the mean and stddev for each of the
+    # measurements. Note that this maintains the angle calculations eg
+    # between gravitymean and X etc. As those calculations 
+    data.x <- data.x[,grep("mean|std",features$name)]
 
     # get the activities results per subject (test and train)
-    data.test.Y  <- read.table(list.data.files$ytest, header=FALSE, col.names=c("ACTIVITY"))
-    data.train.Y <- read.table(list.data.files$ytrain, header=FALSE, col.names=c("ACTIVITY"))
-    data.Y <- rbind(data.test.Y, data.train.Y)
+    data.test.y  <- read.table(list.data.files$ytest, header=FALSE, col.names=c("activity"))
+    data.train.y <- read.table(list.data.files$ytrain, header=FALSE, col.names=c("activity"))
+    data.y <- rbind(data.test.y, data.train.y)
     cat("Processing ... Got all the activities results (train/test)\n")
     
     # replace the activities values with meaningful names using the
     # activity labels instead
-    data.Y$ACTIVITY <- activities[data.Y$ACTIVITY,]$NAME
+    data.y$activity <- activities[data.y$activity,]$name
     
     # combine the subjects, data readings and activity labels in 1 data
     # frame
-    interm.dfrm <- cbind(subjects, data.X, data.Y)
+    interm.dfrm <- cbind(subjects, data.x, data.y)
     
     # calculate the averages of the data values per subject and activity
     result.dfrm <- aggregate(interm.dfrm[,grep("mean|std",names(interm.dfrm))],
-                             by=list(ID=interm.dfrm$ID,
-                                 ACTIVITY=interm.dfrm$ACTIVITY),
+                             by=list(id=interm.dfrm$id,
+                                 activity=interm.dfrm$activity),
                              FUN ="mean")
     
     # order the rows per subject
-    result.dfrm <- result.dfrm[order(result.dfrm$ID),]
+    result.dfrm <- result.dfrm[order(result.dfrm$id),]
     cat("Finished aggregating and ordering the data into a data frame\n")
     return(result.dfrm)
     
 }
 
 
-## FUNCTION writeTidyDatasetCsv
+## FUNCTION WriteTidyDatasetCsv
 ##
 ## Inputs: in.dfrm: a data frame which contains the list of values to be
 ## written out, out.csv.file: the filename for the CSV file to be
@@ -245,9 +290,9 @@ processAndMergeData <- function(list.data.files) {
 ## write out the values from the input data frame
 ##
 
-writeTidyDatasetCsv <- function (in.dfrm,
-                                    out.csv.file=data.file.tidy,
-                                    appendl=FALSE) {
+WriteTidyDatasetCsv <- function (in.dfrm,
+                                 out.csv.file=dataFileTidy,
+                                 appendl=FALSE) {
     if(is.null(in.dfrm)) {
         stop("The input data frame to function 'create.tidy.dataset' cannot be NULL!\n")
     }
@@ -260,16 +305,17 @@ writeTidyDatasetCsv <- function (in.dfrm,
 
 
 ###############################################################
-## Default execution of the functions area 
+## Default execution of the functions
 ###############################################################
-# Overall processing, if the top variable execute.data.processing is
-# TRUE then simply execute all functions in sequence to get the
-# resulting CSV file. If nothing is changed with the Global variables at
-# the top, then the following lines execute the functions precisely in
-# the way expected by the peer assessment project prescription.
+## Overall processing, if the top variable execute.data.processing is
+## TRUE then simply execute all functions in sequence to get the
+## resulting CSV file. If nothing is changed with the Global variables
+## at the top, then the following lines execute the functions precisely
+## in the way expected by the peer assessment project prescription.
 
 if(execute.data.processing) {
-    writeTidyDatasetCsv(in.dfrm=processAndMergeData(list.data.files=determineDataFiles()))
-    
+    list.data.files=DetermineDataFiles()
+    dfrm=ProcessAndMergeData(list.data.files)
+    WriteTidyDatasetCsv(dfrm)
 }
 
